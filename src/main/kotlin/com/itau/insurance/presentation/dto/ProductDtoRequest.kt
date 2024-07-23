@@ -12,5 +12,8 @@ data class ProductDtoRequest(
     val category: Category,
 
     @JsonProperty("preco_base")
-    val priceBase: BigDecimal?
+    val priceBase: BigDecimal,
+
+    @JsonProperty("preco_tarifado")
+    val priceTariff: BigDecimal?=null
 )

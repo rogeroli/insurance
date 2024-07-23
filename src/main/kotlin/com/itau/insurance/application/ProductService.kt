@@ -5,6 +5,8 @@ import com.itau.insurance.domain.enums.Category
 import com.itau.insurance.infrastructure.repository.ProductRepository
 import com.itau.insurance.presentation.dto.ProductDtoRequest
 import com.itau.insurance.presentation.dto.ProductDtoResponse
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
@@ -13,12 +15,17 @@ class ProductService(
     private val repository: ProductRepository,
     private val mapper: ProductMapper
 ) {
-    companion object{
+
+    companion object {
         private val PERCENTAGE_DIVISOR = BigDecimal.valueOf(100)
+        private val logger: Logger = LoggerFactory.getLogger(ProductService::class.java)
     }
 
     fun create(productDtoRequest: ProductDtoRequest): ProductDtoResponse {
-        val priceTariff = calculatePriceTariff(productDtoRequest.category, productDtoRequest.priceBase!!)
+        val priceTariff =
+            productDtoRequest.priceTariff ?:
+            calculatePriceTariff(productDtoRequest.category, productDtoRequest.priceBase)
+
         val product = mapper.toDomain(productDtoRequest, priceTariff)
         val productSaved = repository.save(product)
         return mapper.toDto(productSaved, BigDecimal.ONE)
