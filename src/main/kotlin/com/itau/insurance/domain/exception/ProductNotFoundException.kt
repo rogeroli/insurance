@@ -1,6 +1,6 @@
 package com.itau.insurance.domain.exception
 
-import com.itau.insurance.common.Logger
+import com.itau.insurance.application.common.Logger
 
 class ProductNotFoundException(val id: Long, message: String = "Product not found") : RuntimeException(message) {
     companion object {

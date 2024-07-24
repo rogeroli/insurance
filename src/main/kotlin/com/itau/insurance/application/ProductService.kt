@@ -1,7 +1,7 @@
 package com.itau.insurance.application
 
 import com.itau.insurance.application.mapper.ProductMapper
-import com.itau.insurance.common.Logger
+import com.itau.insurance.application.common.Logger
 import com.itau.insurance.domain.enums.Category
 import com.itau.insurance.domain.exception.ProductNotFoundException
 import com.itau.insurance.infrastructure.repository.ProductRepository
