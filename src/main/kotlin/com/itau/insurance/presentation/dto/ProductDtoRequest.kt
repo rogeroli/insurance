@@ -1,10 +1,12 @@
 package com.itau.insurance.presentation.dto
 
+import com.fasterxml.jackson.annotation.JsonInclude
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.itau.insurance.domain.enums.Category
 import jakarta.validation.constraints.NotNull
 import java.math.BigDecimal
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 data class ProductDtoRequest(
     @JsonProperty("nome")
     @field:NotNull

@@ -1,12 +1,15 @@
 package com.itau.insurance.application
 
-import com.itau.insurance.application.mapper.ProductMapper
 import com.itau.insurance.application.common.Logger
+import com.itau.insurance.application.exceptions.DataBaseGenericException
+import com.itau.insurance.application.mapper.ProductMapper
 import com.itau.insurance.domain.enums.Category
 import com.itau.insurance.domain.exception.ProductNotFoundException
 import com.itau.insurance.infrastructure.repository.ProductRepository
 import com.itau.insurance.presentation.dto.ProductDtoRequest
 import com.itau.insurance.presentation.dto.ProductDtoResponse
+import jakarta.persistence.PersistenceException
+import org.hibernate.HibernateException
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 
@@ -27,7 +30,15 @@ class ProductService(
             calculatePriceTariff(productDtoRequest.category, productDtoRequest.priceBase)
 
         val product = mapper.toDomain(productDtoRequest, priceTariff)
-        val productPersisted = repository.save(product)
+
+        val productPersisted = try{
+            repository.save(product)
+        }catch (exception: HibernateException){
+            throw DataBaseGenericException("Error to persist product")
+        }
+        catch (exception: PersistenceException){
+            throw DataBaseGenericException("Error to persist product")
+        }
 
         return mapper.toDto(productPersisted).let { response ->
                 logger.info("[CREATE_PRODUCT] Product with id ${response.id} created successfully")
@@ -36,8 +47,11 @@ class ProductService(
     }
 
     fun update(id: Long, dtoRequest: ProductDtoRequest): ProductDtoResponse {
-
-        val productPersisted = repository.findById(id)?: throw ProductNotFoundException(id = id)
+        val productPersisted = try {
+            repository.findById(id) ?: throw ProductNotFoundException(id = id)
+        } catch (exception: HibernateException){
+            throw DataBaseGenericException("Error to find product")
+        }
 
         val productToUpdate = productPersisted.copy(
             name = dtoRequest.name,
@@ -46,7 +60,14 @@ class ProductService(
             priceTariff = dtoRequest.priceTariff ?: calculatePriceTariff(dtoRequest.category, dtoRequest.priceBase)
         )
 
-        val productUpdated = repository.save(productToUpdate)
+        val productUpdated = try {
+            repository.save(productToUpdate)
+        }catch (exception: HibernateException){
+            throw DataBaseGenericException("Error to persist product")
+        }
+        catch (exception: PersistenceException){
+            throw DataBaseGenericException("Error to persist product")
+        }
 
         return mapper.toDto(productUpdated).let { response ->
             logger.info("[UPDATE_PRODUCT] Product with id $id was updated successfully")

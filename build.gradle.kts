@@ -46,6 +46,7 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("io.mockk:mockk:1.13.5")
 	testImplementation("org.mockito:mockito-core:5.2.0")
 	testImplementation("org.mockito:mockito-inline:5.2.0")
 }
@@ -58,4 +59,5 @@ kotlin {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+	systemProperty("spring.profiles.active", "test")
 }
