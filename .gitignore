@@ -1,6 +1,8 @@
 HELP.md
-.gradle
+.gradle/
+gradle/
 build/
+
 !**/src/main/**
 !**/src/test/**
 
@@ -14,7 +16,7 @@ build/
 .sts4-cache
 
 ### IntelliJ IDEA ###
-.idea
+.idea/
 *.iws
 *.iml
 *.ipr
