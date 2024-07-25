@@ -6,11 +6,12 @@ plugins {
 }
 
 group = "com.itau.insurance"
-version = "0.0.1-SNAPSHOT"
+version = "0.0.1"
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		languageVersion.set(JavaLanguageVersion.of(17))
 	}
 }
 
@@ -61,3 +62,8 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 	systemProperty("spring.profiles.active", "test")
 }
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	mainClass.set("com.itau.insurance.InsuranceApplicationKt")
+}
+
